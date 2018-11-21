@@ -24,7 +24,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '=p_xv*5krz6@b562mv%!^=r#5&224p
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'cryptic-inlet-26890.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'ancient-coast-66237.herokuapp.com']
 
 
 # Application definition
