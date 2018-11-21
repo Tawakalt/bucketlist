@@ -20,12 +20,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '=p_xv*5krz6@b562mv%!^=r#5&224p*e!4sj=6i=c9s=&69*cx'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '=p_xv*5krz6@b562mv%!^=r#5&224p*e!4sj=6i=c9s=&69*cx')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'cryptic-inlet-26890.herokuapp.com']
 
 
 # Application definition
@@ -122,6 +121,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# The absolute path to the directory where collectstatic will collect static files for deployment.
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 #To authenticate with both BasicAuthentication and TokenAuthentication.
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -132,3 +134,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     )
 }
+
+# Heroku: Update database configuration from $DATABASE_URL.
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
