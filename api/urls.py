@@ -1,14 +1,16 @@
 from django.conf.urls import url, include
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import CreateView, DetailsView, UserManager
+from .views import CreateBucketlist, BucketListDetails, UserManager, CreateCategory, CategoryDetails
 
 urlpatterns = {
-    url(r'^bucketlists/(?P<pk>[0-9]+)/*', DetailsView.as_view(), name="details"),
-    url(r'^bucketlists/*', CreateView.as_view(), name="create"),
+    url(r'^bucketlists/(?P<pk>[0-9]+)/*', BucketListDetails.as_view(), name="bucketlist_details"),
+    url(r'^bucketlists/*', CreateBucketlist.as_view(), name="create_bucketlist"),
     url(r'^auth/', include('rest_framework.urls',namespace='rest_framework')),
     url(r'^get-token/', obtain_auth_token),
-    url(r'^users/*', UserManager.as_view(), name='create_user')
+    url(r'^users/*', UserManager.as_view(), name='create_user'),
+    url(r'^category/*', CreateCategory.as_view(), name="add_category"),
+    url(r'^category/(?P<pk>[0-9]+)/*', CategoryDetails.as_view(), name="category_details"),
 }
 
 urlpatterns = format_suffix_patterns(urlpatterns)

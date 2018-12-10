@@ -1,10 +1,10 @@
 from rest_framework import generics, permissions
 from .permissions import IsOwner
-from .serializers import BucketlistSerializer, UserSerializer
-from .models import Bucketlist, User
+from .serializers import BucketlistSerializer, UserSerializer, CategorySerializer
+from .models import Bucketlist, User, Category
 
 # Create your views here.
-class CreateView(generics.ListCreateAPIView):
+class CreateBucketlist(generics.ListCreateAPIView):
     """This class handles the GET and POSt requests of our rest api."""
     queryset = Bucketlist.objects.all()
     serializer_class = BucketlistSerializer
@@ -20,7 +20,7 @@ class CreateView(generics.ListCreateAPIView):
         return Bucketlist.objects.filter(owner=user)
 
 
-class DetailsView(generics.RetrieveUpdateDestroyAPIView):
+class BucketListDetails(generics.RetrieveUpdateDestroyAPIView):
     """This class handles GET, PUT, PATCH and DELETE requests."""
 
     queryset = Bucketlist.objects.all()
@@ -34,4 +34,17 @@ class UserManager(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save()
+
+class CreateCategory(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+class CategoryDetails(generics.RetrieveUpdateDestroyAPIView):
+    """This class handles GET, PUT, PATCH and DELETE requests."""
+
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 

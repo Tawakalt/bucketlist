@@ -5,10 +5,23 @@ from rest_framework.authtoken.models import Token
 from django.dispatch import receiver
 
 # Create your models here.
+
+class Category(models.Model):
+    """This class represents the bucketlist model."""
+    name = models.CharField(max_length=25, blank=False, unique=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        """Return a human readable representation of the model instance."""
+        return "{}".format(self.name)
+
+
 class Bucketlist(models.Model):
     """This class represents the bucketlist model."""
     name = models.CharField(max_length=255, blank=False, unique=True)
     owner = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='bucketlists')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 
