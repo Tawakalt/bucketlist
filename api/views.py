@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions
 from .permissions import IsOwner
-from .serializers import BucketlistSerializer
-from .models import Bucketlist
+from .serializers import BucketlistSerializer, UserSerializer
+from .models import Bucketlist, User
 
 # Create your views here.
 class CreateView(generics.ListCreateAPIView):
@@ -26,3 +26,12 @@ class DetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Bucketlist.objects.all()
     serializer_class = BucketlistSerializer
     permission_classes = (permissions.IsAuthenticated, IsOwner)
+
+
+class UserManager(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def perform_create(self, serializer):
+        serializer.save()
+
