@@ -1,14 +1,19 @@
-language: python # => 1
-    python: # => 2
-      - "2.6"
-      - "2.7"
-    services: # => 3
-      - mysql
-    env: # => 4
-      -DJANGO=1.8 DB=mysql
-    install: # => 5
-      - pip install -r requirements.txt
-    before_script: # => 6
-      - mysql -e 'create database test;' -u root
-    script: # => 7
-      - python manage.py test
+language: python
+python:
+ - "3.6"
+services:
+ - postgresql
+install:
+ - pip install -r requirements.txt
+before_script:
+ - psql -c 'create database travis_ci_test;' -U postgres
+script:
+ - coverage run -m pytest
+after_success:
+ - coveralls
+deploy:
+  # run migrations after success on branch develop
+  - provider: script
+    script: bash migrate.sh 
+    on:
+      branch: travis
