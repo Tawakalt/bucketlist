@@ -2,8 +2,12 @@ from rest_framework import generics, permissions
 from .permissions import IsOwnerOrAdmin
 from .serializers import BucketlistSerializer, UserSerializer, CategorySerializer
 from .models import Bucketlist, User, Category
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from rest_framework.response import Response
 
 # Create your views here.
+
 class CreateBucketlist(generics.ListCreateAPIView):
     """This class handles the GET and POSt requests of our rest api."""
     queryset = Bucketlist.objects.all()
@@ -14,13 +18,13 @@ class CreateBucketlist(generics.ListCreateAPIView):
         """Save the post data when creating a new bucketlist."""
         serializer.save(owner=self.request.user)
 
-    def get_queryset(self):
+    @method_decorator(cache_page(60*15))
+    def get(self, request):
         """Only return bucketlist items owned by the currently authenticated user."""
         user = self.request.user
-        if user.is_superuser == False:
-            return Bucketlist.objects.filter(owner=user)
-        else:
-            return Bucketlist.objects.all()
+        queryset = self.get_queryset() if user.is_superuser else Bucketlist.objects.filter(owner=user)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class BucketListDetails(generics.RetrieveUpdateDestroyAPIView):
