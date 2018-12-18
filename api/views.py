@@ -1,5 +1,5 @@
 from rest_framework import generics, permissions
-from .permissions import IsOwner
+from .permissions import IsOwnerOrAdmin
 from .serializers import BucketlistSerializer, UserSerializer, CategorySerializer
 from .models import Bucketlist, User, Category
 
@@ -8,7 +8,7 @@ class CreateBucketlist(generics.ListCreateAPIView):
     """This class handles the GET and POSt requests of our rest api."""
     queryset = Bucketlist.objects.all()
     serializer_class = BucketlistSerializer
-    permission_classes = (permissions.IsAuthenticated, IsOwner)
+    permission_classes = (permissions.IsAuthenticated, IsOwnerOrAdmin)
 
     def perform_create(self, serializer):
         """Save the post data when creating a new bucketlist."""
@@ -25,7 +25,7 @@ class BucketListDetails(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = Bucketlist.objects.all()
     serializer_class = BucketlistSerializer
-    permission_classes = (permissions.IsAuthenticated, IsOwner)
+    permission_classes = (permissions.IsAuthenticated, IsOwnerOrAdmin)
 
 
 class UserManager(generics.ListCreateAPIView):
@@ -34,10 +34,12 @@ class UserManager(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save()
+        
 
 class CreateCategory(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser)
 
     def perform_create(self, serializer):
         serializer.save()
@@ -47,4 +49,6 @@ class CategoryDetails(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser)
+
 
