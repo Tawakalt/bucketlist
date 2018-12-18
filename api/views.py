@@ -17,7 +17,10 @@ class CreateBucketlist(generics.ListCreateAPIView):
     def get_queryset(self):
         """Only return bucketlist items owned by the currently authenticated user."""
         user = self.request.user
-        return Bucketlist.objects.filter(owner=user)
+        if user.is_superuser == False:
+            return Bucketlist.objects.filter(owner=user)
+        else:
+            return Bucketlist.objects.all()
 
 
 class BucketListDetails(generics.RetrieveUpdateDestroyAPIView):
