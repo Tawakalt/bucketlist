@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/Tawakalt/bucketlist.svg?branch=travis)](https://travis-ci.org/Tawakalt/bucketlist)
 # Bucket List API
 
 A bucketlist is a list of things you'd like to do, experience or achieve.
