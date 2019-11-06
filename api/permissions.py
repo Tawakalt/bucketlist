@@ -1,12 +1,6 @@
-from rest_framework.permissions import BasePermission
-from .models import Bucketlist
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-
-class IsOwner(BasePermission):
-    """Custom permission class to allow only bucketlist owners to edit them."""
-
+class IsOwnerOrAdmin(BasePermission):
     def has_object_permission(self, request, view, obj):
-        """Return True if permission is granted to the bucketlist owner."""
-        if isinstance(obj, Bucketlist):
-            return obj.owner == request.user
-        return obj.owner == request.user
+        return obj.owner == request.user or request.user.is_superuser == True
+        

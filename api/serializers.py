@@ -1,5 +1,6 @@
+from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
-from .models import Bucketlist
+from .models import Bucketlist, User, Category
 
 
 class BucketlistSerializer(serializers.ModelSerializer):
@@ -9,5 +10,25 @@ class BucketlistSerializer(serializers.ModelSerializer):
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
         model = Bucketlist
-        fields = ('id', 'name', 'owner', 'date_created', 'date_modified')
+        fields = ('id', 'name', 'owner', 'category', 'date_created', 'date_modified')
         read_only_fields = ('date_created', 'date_modified')
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    """Serializer to map the Model instance into JSON format."""
+
+    class Meta:
+        """Meta class to map serializer's fields with the model fields."""
+        model = Category
+        fields = ('id', 'name', 'date_created', 'date_modified')
+        read_only_fields = ('date_created', 'date_modified')
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password')
+
+    def validate_password(self, value):
+        return make_password(value)
